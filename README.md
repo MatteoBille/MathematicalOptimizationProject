@@ -28,13 +28,14 @@ or<br>
     #attr: 0 -> no visualizzazione grafica
     solver.solve_problem(1)
 ## CSV dati
-#truck + numero truck
-dati truck: 		 nTruck|lunghezza|larghezza|altezza|pesoMax|pesoMaxAsseAnt|distanzaAsseAnt|pesoMaxAssePost|distanzaAssePost|
-#pallet + numero pallet
-dati pallet:
-nPallet|lunghezza|larghezza|tipologiaPallet
-#distance + nodes x nodes
-matrice delle distanze
+#truck + numero truck<br>
+dati truck:<br>
+nTruck|lunghezza|larghezza|altezza|pesoMax|pesoMaxAsseAnt|distanzaAsseAnt|pesoMaxAssePost|distanzaAssePost|<br>
+#pallet + numero pallet<br>
+dati pallet:<br>
+nPallet|lunghezza|larghezza|tipologiaPallet<br>
+#distance + nodes x nodes<br>
+matrice delle distanze<br>
 esempi:
 <table>
 	<tr>
