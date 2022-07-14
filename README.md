@@ -17,10 +17,10 @@ Oltre al modello "base" del paper si è voluta aggiungere la gestione pallet con
 La larghezza del camion rimane invariata in maniera tale da permettere due file di pallet su ogni camion
 
 ## Utilizzo
-Nella classe chiamante:
-`from TruckLoadingClass import solve_pallet_loading_vehicle_routing as ProblemSolver`(versione base)
-or
-`from TruckLoadingClassModified import solve_pallet_loading_vehicle_routing as ProblemSolver`(versione con aggiunte)
+Nella classe chiamante:<br>
+`from TruckLoadingClass import solve_pallet_loading_vehicle_routing as ProblemSolver`(versione base)<br>
+or<br>
+`from TruckLoadingClassModified import solve_pallet_loading_vehicle_routing as ProblemSolver`(versione con aggiunte)<br>
 
     solver = ProblemSolver("path_file_csv")  
     
