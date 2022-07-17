@@ -8,13 +8,10 @@ from Draw_Solution import draw_result
 
 class solve_pallet_loading_vehicle_routing:
 
-
     def __init__(self,path):
         self.truck = []
         self.pallet = {}
         name=os.path.basename(path)
-        self.K=5
-
 
         m = re.search('Inst(.+?)P', name)
         if m:
@@ -133,7 +130,7 @@ class solve_pallet_loading_vehicle_routing:
             gb.quicksum(self.costs[i, j] * X[k, i, j] for i in range(self.NODES) for j in range(self.NODES) if j != i for k in range(self.K))
         )
 
-        # MIO: block same point travel
+        # block same point travel
         for k in range(self.K):
             for i in range(self.NODES):
                 problem.addConstr(X[k, i, i] == 0)
@@ -281,7 +278,7 @@ class solve_pallet_loading_vehicle_routing:
         # dinamically stable cargo
         # 19
         for k in range(self.K):
-            for p in range(1, self.P[k] - 1):
+            for p in range(1, self.P[k]):
                 if p != self.P[k] / 2:
                     problem.addConstr(
                         L[k, p] >= (gb.quicksum(Z[k, i, t, p] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
@@ -308,7 +305,7 @@ class solve_pallet_loading_vehicle_routing:
                     R[k, p] >= gb.quicksum(Z[k, i, t, p] for i in range(1, self.NODES) for t in range(self.pallet_request[i])))
         # 23
         for k in range(self.K):
-            for c in range(int(self.P[k] / 2) - 1):
+            for c in range(int(self.P[k] / 2)):
                 problem.addConstr(
                     S[k, c] >= (gb.quicksum(
                         Z[k, i, t, c] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
@@ -316,7 +313,7 @@ class solve_pallet_loading_vehicle_routing:
                                     Z[k, i, t, c + self.P[k] / 2] for i in range(1, self.NODES) for t in range(self.pallet_request[i]))))
         # 24
         for k in range(self.K):
-            for c in range(int(self.P[k] / 2) - 1):
+            for c in range(int(self.P[k] / 2)):
                 problem.addConstr(
                     S[k, c] >= (gb.quicksum(
                         Z[k, i, t, c + (self.P[k] / 2)] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
@@ -343,25 +340,22 @@ class solve_pallet_loading_vehicle_routing:
             problem.addConstr(
                 gb.quicksum(S[k, c] for c in range(int(self.P[k] / 2))) <= 1)
 
-        # simmetry constraint
-        for i in range(1, self.NODES):
-            if i < self.K:
-                problem.addConstr(
-                    gb.quicksum(Z[k, i, 0, p] for k in range(self.K) if k <= i for p in range(self.P[k])) == 1)
-
         # if truck travel from i to j has to delever at least one j's pallet
+        #33
         for k in range(self.K):
             for j in range(1, self.NODES):
                 problem.addConstr(gb.quicksum(X[k, i, j] for i in range(self.NODES)) <=
                                   gb.quicksum(Z[k, j, t, p] for t in range(self.pallet_request[j]) for p in range(self.P[k])))
 
         # if on truck is loaded j's pallet the rout of truck must visit j
+        #34
         for k in range(self.K):
             for j in range(1, self.NODES):
                 problem.addConstr(gb.quicksum(Z[k, j, t, p] for t in range(self.pallet_request[j]) for p in range(self.P[k])) <=
                                   gb.quicksum(X[k, j, i] * self.pallet_request[j] for i in range(self.NODES)))
 
         # sequential loading constraint
+        #35
         for k in range(self.K):
             for p1 in range(self.P[k]):
                 for p2 in range(self.P[k]):

@@ -1,4 +1,3 @@
-import json
 import gurobipy as gb
 import numpy as np
 import math
@@ -7,16 +6,12 @@ import csv
 import re
 from Draw_Solution import draw_result
 
-
 class solve_pallet_loading_vehicle_routing:
-
 
     def __init__(self,path):
         self.truck = {}
         self.pallet = {}
         name=os.path.basename(path)
-
-
 
         m = re.search('Inst(.+?)P', name)
         if m:
@@ -38,7 +33,6 @@ class solve_pallet_loading_vehicle_routing:
             self.truck["weightEmptyTruck"] = 4000
             self.truck["gravityCenterX"] = self.truck["length"]/2
             self.truck["gravityCenterY"] = self.truck["width"]/2
-
             self.truck["deviation1x"] = self.truck["distanceAxle2"]-self.truck["length"]/2
             self.truck["deviation2x"] = self.truck["length"]/2
             self.truck["deviation1y"] = self.truck["width"]/8
@@ -69,17 +63,6 @@ class solve_pallet_loading_vehicle_routing:
                 self.costs[i,j]=int(parsed_row[j])
 
 
-        f =open("Colors.json")
-        colors = json.loads(f.read())
-
-        self.pallet_colors=[]
-        for i in colors["palletColors"]:
-            self.pallet_colors.append(i)
-
-        self.route_color=[]
-        for i in colors["routeColors"]:
-            self.route_color.append(i)
-
     def find_edge_from_variable_name(self,name):
         s1 = '['
         s2 = ']'
@@ -99,7 +82,7 @@ class solve_pallet_loading_vehicle_routing:
         self.coordinate_of_location = np.zeros((self.P, 2), dtype=np.float64)
 
         for p in range(self.P):
-            distance_x = self.truck["length"] - ((p % (self.P / 2)) + 0.5) * self.pallet["width"]
+            distance_x = ((p % (self.P / 2)) + 0.5) * self.pallet["width"]
             distance_y = (math.floor(p / (self.P / 2)) + 0.5) * (self.pallet["length"])
             self.coordinate_of_location[p][0] = distance_x
             self.coordinate_of_location[p][1] = distance_y
@@ -129,11 +112,12 @@ class solve_pallet_loading_vehicle_routing:
         S = problem.addVars([(k, c) for c in range(int(self.P / 2)) for k in range(self.K)], vtype=gb.GRB.BINARY, name="S")
 
         # OBJECTIVE FUNCTION
+        #1
         problem.setObjective(
             gb.quicksum(self.costs[i, j] * X[k, i, j] for i in range(self.NODES) for j in range(self.NODES) if j != i for k in range(self.K))
         )
 
-        # MIO: block same point travel
+        #block same point travel
         for k in range(self.K):
             for i in range(self.NODES):
                 problem.addConstr(X[k, i, i] == 0)
@@ -273,7 +257,7 @@ class solve_pallet_loading_vehicle_routing:
         # dinamically stable cargo
         # 19
         for k in range(self.K):
-            for p in range(1, self.P - 1):
+            for p in range(1, self.P):
                 if p != self.P / 2:
                     problem.addConstr(
                         L[k, p] >= (gb.quicksum(Z[k, i, t, p] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
@@ -300,7 +284,7 @@ class solve_pallet_loading_vehicle_routing:
                     R[k, p] >= gb.quicksum(Z[k, i, t, p] for i in range(1, self.NODES) for t in range(self.pallet_request[i])))
         # 23
         for k in range(self.K):
-            for c in range(int(self.P / 2) - 1):
+            for c in range(int(self.P / 2)):
                 problem.addConstr(
                     S[k, c] >= (gb.quicksum(
                         Z[k, i, t, c] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
@@ -308,7 +292,7 @@ class solve_pallet_loading_vehicle_routing:
                                     Z[k, i, t, c + self.P / 2] for i in range(1, self.NODES) for t in range(self.pallet_request[i]))))
         # 24
         for k in range(self.K):
-            for c in range(int(self.P / 2) - 1):
+            for c in range(int(self.P / 2)):
                 problem.addConstr(
                     S[k, c] >= (gb.quicksum(
                         Z[k, i, t, c + (self.P / 2)] for i in range(1, self.NODES) for t in range(self.pallet_request[i])) -
