@@ -7,8 +7,8 @@ M. T. Alonso, A. Martinez-Sykora, R. Alvarez-Valdes, F. Parreño
 Instradare una flotta di k camion per soddisfare la richiesta di pallet da parte di n clienti mantenendo il costo più basso possibile. Tutto questo soddisfando i vincoli sul caricamento dei pallet e vincoli sull'instadamento, in maniera tale consegnare tutti i pallet richiesti e di avere su ogni camion un carico stabile posizionato in maniera tale da permettere lo scaricamento dei pallet senza doverne spostare altri
 
 ## Sviluppo
-Lo sviluppo è stato fatto in python utilizzando guroby con la licenza accademica.
-E' stata sviluppata una classe per la risoluzione in cui oltre al metodo che modella il problema sono presenti anche altri metodi che creano una schermata per la visualizzazione del risultato.
+Lo sviluppo è stato fatto in python utilizzando guroby con la licenza accademica.<br>
+Sono state sviluppate una classe per la risoluzione e una classe per la visualizzazionen del risultato.
 
 ![Tool visualizzazione](https://drive.google.com/uc?export=view&id=1HqZDp6JVdgL_mfTrLwwnS13vd5PgQWLN)
 
