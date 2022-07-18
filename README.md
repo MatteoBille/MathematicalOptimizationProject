@@ -28,6 +28,11 @@ or<br>
     #attr: 0 -> no visualizzazione grafica
     solver.solve_problem(1)
 ## CSV dati
+Il nome deve seguire lo standard:<br>
+Inst[#nClienti]Pallet[#nTipologiePallet]Truck[#nTruck]Req[#nTotRichieste]<br>
+es: Inst5Pallet1Truck2Req25<br>
+
+I dati all'interno dovranno seguire questo schema:<br>
 #truck + numero truck<br>
 dati truck:<br>
 nTruck|lunghezza|larghezza|altezza|pesoMax|pesoMaxAsseAnt|distanzaAsseAnt|pesoMaxAssePost|distanzaAssePost|<br>
