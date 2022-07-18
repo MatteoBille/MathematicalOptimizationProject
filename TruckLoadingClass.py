@@ -31,8 +31,8 @@ class solve_pallet_loading_vehicle_routing:
             self.truck["maxWeigthAxle2"] = int(rows[1][7])
             self.truck["distanceAxle2"] = int(rows[1][8])
             self.truck["weightEmptyTruck"] = 4000
-            self.truck["gravityCenterX"] = self.truck["length"]/2
-            self.truck["gravityCenterY"] = self.truck["width"]/2
+            self.truck["geometricCenterX"] = self.truck["length"]/2
+            self.truck["geometricCenterY"] = self.truck["width"]/2
             self.truck["deviation1x"] = self.truck["distanceAxle2"]-self.truck["length"]/2
             self.truck["deviation2x"] = self.truck["length"]/2
             self.truck["deviation1y"] = self.truck["width"]/8
@@ -215,7 +215,7 @@ class solve_pallet_loading_vehicle_routing:
         # constraint on gravityCenter
         #15
         for k in range(self.K):
-            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["gravityCenterX"] +
+            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["geometricCenterX"] +
                               gb.quicksum(
                                   self.coordinate_of_location[p][0] * self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                   range(1, self.NODES)
@@ -223,36 +223,36 @@ class solve_pallet_loading_vehicle_routing:
                               (gb.quicksum(
                                   self.pallet_weight[i][t] * Z[k, i, t, p] for i in range(1, self.NODES) for t
                                   in range(self.pallet_request[i]) for p in range(self.P)) + self.truck["weightEmptyTruck"]) *
-                              (self.truck["gravityCenterX"] + self.truck["deviation1x"]))
+                              (self.truck["geometricCenterX"] + self.truck["deviation1x"]))
         #16
         for k in range(self.K):
-            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["gravityCenterX"] +
+            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["geometricCenterX"] +
                               gb.quicksum(self.coordinate_of_location[p][0] * self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                           range(1, self.NODES) for t in range(self.pallet_request[i]) for p in range(self.P)) >=
                               (gb.quicksum(
                                   self.pallet_weight[i][t] * Z[k, i, t, p] for i in range(1, self.NODES)
                                   for t in range(self.pallet_request[i]) for p in range(self.P)) + self.truck["weightEmptyTruck"]) *
-                              (self.truck["gravityCenterX"] - self.truck["deviation2x"]))
+                              (self.truck["geometricCenterX"] - self.truck["deviation2x"]))
 
         #17
         for k in range(self.K):
-            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["gravityCenterY"] +
+            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["geometricCenterY"] +
                               gb.quicksum(self.coordinate_of_location[p][1] * self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                           range(1, self.NODES) for t in range(self.pallet_request[i]) for p in range(self.P)) <=
                               (gb.quicksum(self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                            range(1, self.NODES) for t in range(self.pallet_request[i]) for p in range(self.P)) + self.truck[
                                    "weightEmptyTruck"]) *
-                              (self.truck["gravityCenterY"] + self.truck["deviation1y"]))
+                              (self.truck["geometricCenterY"] + self.truck["deviation1y"]))
 
         #18
         for k in range(self.K):
-            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["gravityCenterY"] +
+            problem.addConstr(self.truck["weightEmptyTruck"] * self.truck["geometricCenterY"] +
                               gb.quicksum(self.coordinate_of_location[p][1] * self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                           range(1, self.NODES) for t in range(self.pallet_request[i]) for p in range(self.P)) >=
                               (gb.quicksum(self.pallet_weight[i][t] * Z[k, i, t, p] for i in
                                            range(1, self.NODES) for t in range(self.pallet_request[i]) for p in range(self.P)) + self.truck[
                                    "weightEmptyTruck"]) *
-                              (self.truck["gravityCenterY"] - self.truck["deviation2y"]))
+                              (self.truck["geometricCenterY"] - self.truck["deviation2y"]))
 
         # dinamically stable cargo
         # 19
@@ -320,24 +320,28 @@ class solve_pallet_loading_vehicle_routing:
                 gb.quicksum(S[k, c] for c in range(int(self.P / 2))) <= 1)
 
         # simmetry constraint
+        #32
         for i in range(1, self.NODES):
             if i < self.K:
                 problem.addConstr(
                     gb.quicksum(Z[k, i, 0, p] for k in range(self.K) if k <= i for p in range(self.P)) == 1)
 
         # if truck travel from i to j has to delever at least one j's pallet
+        #33
         for k in range(self.K):
             for j in range(1, self.NODES):
                 problem.addConstr(gb.quicksum(X[k, i, j] for i in range(self.NODES)) <=
                                   gb.quicksum(Z[k, j, t, p] for t in range(self.pallet_request[j]) for p in range(self.P)))
 
         # if on truck is loaded j's pallet the rout of truck must visit j
+        #34
         for k in range(self.K):
             for j in range(1, self.NODES):
                 problem.addConstr(gb.quicksum(Z[k, j, t, p] for t in range(self.pallet_request[j]) for p in range(self.P)) <=
                                   gb.quicksum(X[k, j, i] * self.pallet_request[j] for i in range(self.NODES)))
 
         # sequential loading constraint
+        #35
         for k in range(self.K):
             for p1 in range(self.P):
                 for p2 in range(self.P):
@@ -349,6 +353,8 @@ class solve_pallet_loading_vehicle_routing:
                                                   2 - X[k, i, j])
 
         problem.optimize()
+
+
 
         if show_result == 1:
             list = []

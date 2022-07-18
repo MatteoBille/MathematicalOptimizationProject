@@ -93,7 +93,7 @@ class solve_pallet_loading_vehicle_routing:
             self.coordinate_of_location.append(np.zeros((self.P[k], 2), dtype=np.float64))
 
             for p in range(self.P[k]):
-                distance_x = (self.P[k]/2 * self.pallet[0]["width"]) - ((p % (self.P[k] / 2)) + 0.5) * self.pallet[0]["width"]
+                distance_x = ((p % (self.P[k] / 2)) + 0.5) * self.pallet[0]["width"]
                 distance_y = (math.floor(p / (self.P[k] / 2)) + 0.5) * (self.pallet[0]["length"])
                 self.coordinate_of_location[k][p][0] = distance_x
                 self.coordinate_of_location[k][p][1] = distance_y
