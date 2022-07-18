@@ -13,8 +13,8 @@ E' stata sviluppata una classe per la risoluzione in cui oltre al metodo che mod
 ![Tool visualizzazione](https://drive.google.com/uc?export=view&id=1HqZDp6JVdgL_mfTrLwwnS13vd5PgQWLN)
 
 ## Aggiunte
-Oltre al modello "base" del paper si è voluta aggiungere la gestione pallet con altezze differenti e di camion con lunghezza e altezza diverse per provare ad estendere maggiormente l'utilizzabilità del modello.
-La larghezza del camion rimane invariata in maniera tale da permettere due file di pallet su ogni camion
+Oltre al modello "base" del paper ho voluto provare ad aggiungere la gestione pallet con altezze differenti e di camion con lunghezza e altezza diverse per provare ad estendere maggiormente l'utilizzabilità del modello.
+La larghezza del camion rimane invariata in maniera tale da permettere due righe di pallet su ogni camion
 
 ## Utilizzo
 Nella classe chiamante:<br>
