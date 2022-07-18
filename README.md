@@ -4,7 +4,7 @@
 M. T. Alonso, A. Martinez-Sykora, R. Alvarez-Valdes, F. Parreño
 
 ## Obiettivo
-Instradare una flotta di k camion per soddisfare la richiesta di pallet da parte di n clienti mantenendo il costo più basso possibile. Tutto questo soddisfando i vincoli sul caricamento dei pallet e vincoli sull'instadamento, in maniera tale consegnare tutti i pallet richiesti e di avere su ogni camion un carico stabile posizionato in maniera tale da permettere lo scaricamento dei pallet in maniera semplice
+Instradare una flotta di k camion per soddisfare la richiesta di pallet da parte di n clienti mantenendo il costo più basso possibile. Tutto questo soddisfando i vincoli sul caricamento dei pallet e vincoli sull'instadamento, in maniera tale consegnare tutti i pallet richiesti e di avere su ogni camion un carico stabile posizionato in maniera tale da permettere lo scaricamento dei pallet senza doverne spostare altri
 
 ## Sviluppo
 Lo sviluppo è stato fatto in python utilizzando guroby con la licenza accademica.
